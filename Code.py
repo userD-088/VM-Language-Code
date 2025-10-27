@@ -1,4 +1,3 @@
-# Programm
 def Programm(inp):
     # Memory
     REG = [0, 0, 0, 0]
@@ -8,6 +7,7 @@ def Programm(inp):
     print("[Programm Started...]\n")
 
     code = []
+    raw_code = []
     for l in inp.strip().split('\n'):
         l = l.strip()
         if not l:
@@ -16,30 +16,25 @@ def Programm(inp):
             continue
         values = [int(v, 16) for v in l.split()]
         code.append(values)
-
-    raw_code = []
-    for l in inp.strip().split('\n'):
-        l = l.strip()
-        if not l:
-            continue
-        if l.startswith(";"):
-            continue
         raw_code.append(l)
 
     line = 0
     
     while line < 255:
-        try:
+        if line < len(code):
             c, r1, r2, x = code[line]
-        except:
-            pass
+        else:
+            c, r1, r2, x = 0, 0, 0, 0
 
         if "1" in show:
             print(f"[Debug REG: {[f'{r:02X}' for r in REG]}]")
         elif "2" in show:
             print(f"[Debug RAM: {[f'{v:02X}' for v in RAM]}]")
         elif "3" in show:
-            print(f"[Debug Command: {raw_code[line]}]")
+            if line < len(raw_code):
+                print(f"[Debug Command: {raw_code[line]}]")
+            else:
+                print(f"[Debug Command: 0 0 0 00]")
 
         if c == 0x0:  # Nothing
             line += 1
@@ -117,13 +112,4 @@ def Programm(inp):
         elif c == 0xF:  # End Program
             break
         
-        if line > len(code):
-            raise RuntimeError(f"Insufficient Data. Excpected FF lines but only found: {(len(code)):02X}")
-        
-    print(f"\n[Programm finished at {(len(code)):02X}.]")
-
-programm_code = """
-;programm here
-"""
-
-Programm(programm_code)
+    print(f"\n[Programm finished at {line:02X}.]")
