@@ -2,7 +2,7 @@
 ### Memory
 There are only 4 Registers, each able to contain 1 Byte of information (00-FF). Operations are made within these 4 Registers.<br>
 The RAM has 256 Places with each able to contain 1 Byte.<br>
-The Programm can only reach 256 lines of code which also accounts to 1 Byte.<br>
+The Programm can only reach 256(FF) lines of code which also accounts to 1 Byte. If the Program doesn't have an explicit end Statement, it will continue to do Nothing until it comes to line FF<br>
 Generally speaking, the 1 Byte value can only be a whole positve number or 0. If the value exceedes/falls bellow 0-255 (00-FF) the programm just calculates the value in mod 256 (e.g. 257 -> 1).
 
 ### Syntax
