@@ -1,4 +1,4 @@
-# Programm Description
+# Description
 ### Memory
 There are only 4 Registers, each able to contain 1 Byte of information (00-FF). Operations are made within these 4 Registers.<br>
 The RAM has 256 Places with each able to contain 1 Byte.<br>
