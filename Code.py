@@ -10,10 +10,9 @@ def Programm(inp):
     code = []
     for l in inp.strip().split('\n'):
         l = l.strip()
-        if not l:  # leere Zeile ignorieren
+        if not l:
             continue
         if l.startswith(";"):
-            # Kommentarzeile, vielleicht später etwas damit machen
             continue
         values = [int(v, 16) for v in l.split()]
         code.append(values)
@@ -124,7 +123,7 @@ def Programm(inp):
     print(f"\n[Programm finished at {(len(code)):02X}.]")
 
 programm_code = """
-;programm code here
+;programm here
 """
 
 Programm(programm_code)
