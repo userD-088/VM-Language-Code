@@ -10,13 +10,30 @@ def Programm(inp):
     raw_code = []
     for l in inp.strip().split('\n'):
         l = l.strip()
-        if not l:
+        if not l or l.startswith(";"):
             continue
-        if l.startswith(";"):
-            continue
-        values = [int(v, 16) for v in l.split()]
-        code.append(values)
-        raw_code.append(l)
+        try:
+            values = [int(v, 16) for v in l.split()]
+            if len(values) != 4:
+                raise ValueError(f"Invalid instruction length: {l}")
+
+            c, r1, r2, x = values
+
+            if not (0x0 <= c <= 0xF):
+                raise ValueError(f"Invalid opcode c = {c:02X} in line: {l}")
+            if not (0x0 <= r1 <= 0x3):
+                raise ValueError(f"Invalid r1 = {r1} in line: {l}")
+            if not (0x0 <= r2 <= 0x3):
+                raise ValueError(f"Invalid r2 = {r2} in line: {l}")
+            if not (0x00 <= x <= 0xFF):
+                raise ValueError(f"Invalid x = {x:02X} in line: {l}")
+
+            code.append(values)
+            raw_code.append(l)
+
+        except ValueError as e:
+            print(f"[Parsing Error: {e}]")
+            exit()
 
     line = 0
     
@@ -45,7 +62,8 @@ def Programm(inp):
 
         elif c == 0x2:  # r1 mod r2 = R0
             if REG[r2] == 0:
-                raise ZeroDivisionError(f"Division with 0 at REG{r2}")
+                print(f"[ZeroDivisionError: Division with 0 at REG{r2}]")
+                exit()
             REG[0] = (REG[r1] % REG[r2]) & 0xFF
             line += 1
 
@@ -63,7 +81,8 @@ def Programm(inp):
 
         elif c == 0x6:  # r1 // r2 = R0
             if REG[r2] == 0:
-                raise ZeroDivisionError(f"Division with 0 at REG{r2}")
+                print(f"[ZeroDivisionError: Division with 0 at REG{r2}]")
+                exit()
             REG[0] = (REG[r1] // REG[r2]) & 0xFF
             line += 1
 
@@ -104,9 +123,9 @@ def Programm(inp):
                         REG[r1] = w
                         break
                     else:
-                        print(f"Value out of range")
+                        print(f"[Value out of range.]")
                 except ValueError:
-                    print(f"Invalid literal")
+                    print(f"[Invalid literal.]")
             line += 1
 
         elif c == 0xF:  # End Program
